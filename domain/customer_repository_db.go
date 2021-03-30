@@ -1,8 +1,10 @@
 package domain
 
 import (
+	"banking-app/config"
 	"banking-app/errs"
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -69,13 +71,19 @@ func (cr CustomerRepositoryDb) FindById(id string) (*Customer, *errs.AppError) {
 }
 
 func NewCustomerRepositoryDb() CustomerRepositoryDb {
-	client, err := sqlx.Open("mysql", "root:root@tcp(localhost:3306)/banking")
+	dbAddr := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s",
+		config.DB_USERNAME, config.DB_PASSWORD, config.DB_ADDRESS, config.DB_PORT, config.DB_SCHEMA,
+	)
+
+	client, err := sqlx.Open("mysql", dbAddr)
 	if err != nil {
 		panic(err)
 	}
-	// See "Important settings" section.
+
 	client.SetConnMaxLifetime(time.Minute * 3)
 	client.SetMaxOpenConns(10)
 	client.SetMaxIdleConns(10)
+
 	return CustomerRepositoryDb{client}
 }

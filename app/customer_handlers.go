@@ -29,7 +29,7 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		writeResponse(w, http.StatusOK, customers)
+		writeResponse(w, http.StatusOK, domain.CustomersToDto(customers))
 	}
 }
 
@@ -42,7 +42,7 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		writeResponse(w, http.StatusOK, customer)
+		writeResponse(w, http.StatusOK, customer.ToDto())
 	}
 }
 
