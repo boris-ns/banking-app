@@ -18,3 +18,7 @@ func NewNotFoundError(message string) *AppError {
 func NewUnexpectedError(message string) *AppError {
 	return &AppError{message, http.StatusInternalServerError}
 }
+
+func NewBadRequestError(message string) *AppError {
+	return &AppError{message, http.StatusBadRequest}
+}

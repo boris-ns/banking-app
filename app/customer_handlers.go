@@ -1,6 +1,8 @@
 package app
 
 import (
+	"banking-app/domain"
+	"banking-app/errs"
 	"banking-app/service"
 	"encoding/json"
 	"net/http"
@@ -13,7 +15,18 @@ type CustomerHandlers struct {
 }
 
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	if customers, err := ch.service.GetAllCustomers(); err != nil {
+	var customers []domain.Customer
+	var err *errs.AppError
+
+	status := r.URL.Query().Get("status")
+
+	if status == "" {
+		customers, err = ch.service.GetAllCustomers()
+	} else {
+		customers, err = ch.service.GetAllCustomersWithStatus(status)
+	}
+
+	if err != nil {
 		writeResponse(w, err.Code, err.AsMessage())
 	} else {
 		writeResponse(w, http.StatusOK, customers)
